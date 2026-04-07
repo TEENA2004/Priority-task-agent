@@ -1,0 +1,60 @@
+name: priority-task-agent
+version: "1.0.0"
+description: >
+  RL environment where an AI agent learns to prioritize
+  daily tasks based on deadlines, importance, and effort.
+  Solves the real problem of task overload faced by
+  students and working professionals every day.
+
+author: Teena Sharma
+tags:
+  - openenv
+  - task-prioritization
+  - real-world
+  - scheduling
+
+environment:
+  entry_point: priority_task_env.py
+  class_name: PriorityTaskEnv
+
+observation_space:
+  type: object
+  description: List of pending tasks with their details
+  fields:
+    - tasks: list of task objects with id, name, deadline, importance, effort
+    - completed_task_ids: list of completed task ids
+    - current_time: float, hours elapsed
+    - step_number: int, current step count
+
+action_space:
+  type: discrete
+  description: ID of the task the agent wants to work on next
+  fields:
+    - task_id: integer, must be a valid pending task id
+
+reward:
+  range: [0.0, 1.0]
+  description: >
+    1.0 for optimal task choice, 0.8 for good choice,
+    0.5 for acceptable, 0.2 for poor choice,
+    0.0 for missed deadline
+
+tasks:
+  - name: easy_sort
+    description: Sort 3 tasks with very different priority scores
+    difficulty: easy
+    expected_score: 0.9
+
+  - name: medium_sort
+    description: Sort 5 tasks with similar priority scores
+    difficulty: medium
+    expected_score: 0.7
+
+  - name: hard_deadline
+    description: Sort 5 tasks where deadlines are very tight
+    difficulty: hard
+    expected_score: 0.5
+
+docker:
+  image: python:3.11-slim
+  port: 8000
